@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-package com.google.samples.apps.sunflower.adapters
+package com.google.samples.apps.sunflower.ui
 
-import android.view.View
-import androidx.databinding.BindingAdapter
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Shapes
+import androidx.compose.ui.unit.dp
 
-@BindingAdapter("isGone")
-fun bindIsGone(view: View, isGone: Boolean) {
-    view.visibility = if (isGone) {
-        View.GONE
-    } else {
-        View.VISIBLE
-    }
-}
+val Shapes = Shapes(
+    small = RoundedCornerShape(
+        topStart = 0.dp,
+        topEnd = 12.dp,
+        bottomStart = 12.dp,
+        bottomEnd = 0.dp
+    ),
+    medium = RoundedCornerShape(
+        topStart = 0.dp,
+        topEnd = 12.dp,
+        bottomStart = 12.dp,
+        bottomEnd = 0.dp
+    )
+)

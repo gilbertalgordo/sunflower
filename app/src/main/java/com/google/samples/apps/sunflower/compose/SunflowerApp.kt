@@ -19,64 +19,46 @@ package com.google.samples.apps.sunflower.compose
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.widget.Toolbar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ShareCompat
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.google.samples.apps.sunflower.R
 import com.google.samples.apps.sunflower.compose.gallery.GalleryScreen
 import com.google.samples.apps.sunflower.compose.home.HomeScreen
-import com.google.samples.apps.sunflower.compose.home.SunflowerPage
 import com.google.samples.apps.sunflower.compose.plantdetail.PlantDetailsScreen
-import com.google.samples.apps.sunflower.viewmodels.PlantListViewModel
 
 @Composable
-fun SunflowerApp(
-    onPageChange: (SunflowerPage) -> Unit = {},
-    onAttached: (Toolbar) -> Unit = {},
-    plantListViewModel: PlantListViewModel = hiltViewModel(),
-) {
+fun SunflowerApp() {
     val navController = rememberNavController()
     SunFlowerNavHost(
-        plantListViewModel = plantListViewModel,
-        navController = navController,
-        onPageChange = onPageChange,
-        onAttached = onAttached
+        navController = navController
     )
 }
 
 @Composable
 fun SunFlowerNavHost(
-    navController: NavHostController,
-    onPageChange: (SunflowerPage) -> Unit = {},
-    onAttached: (Toolbar) -> Unit = {},
-    plantListViewModel: PlantListViewModel = hiltViewModel(),
+    navController: NavHostController
 ) {
     val activity = (LocalContext.current as Activity)
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") {
+    NavHost(navController = navController, startDestination = Screen.Home.route) {
+        composable(route = Screen.Home.route) {
             HomeScreen(
                 onPlantClick = {
-                    navController.navigate("plantDetail/${it.plantId}")
-                },
-                onPageChange = onPageChange,
-                onAttached = onAttached,
-                plantListViewModel = plantListViewModel
+                    navController.navigate(
+                        Screen.PlantDetail.createRoute(
+                            plantId = it.plantId
+                        )
+                    )
+                }
             )
         }
         composable(
-            "plantDetail/{plantId}",
-            arguments = listOf(navArgument("plantId") {
-                type = NavType.StringType
-            })
+            route = Screen.PlantDetail.route,
+            arguments = Screen.PlantDetail.navArguments
         ) {
             PlantDetailsScreen(
                 onBackClick = { navController.navigateUp() },
@@ -84,15 +66,17 @@ fun SunFlowerNavHost(
                     createShareIntent(activity, it)
                 },
                 onGalleryClick = {
-                    navController.navigate("gallery/${it.name}")
+                    navController.navigate(
+                        Screen.Gallery.createRoute(
+                            plantName = it.name
+                        )
+                    )
                 }
             )
         }
         composable(
-            "gallery/{plantName}",
-            arguments = listOf(navArgument("plantName") {
-                type = NavType.StringType
-            })
+            route = Screen.Gallery.route,
+            arguments = Screen.Gallery.navArguments
         ) {
             GalleryScreen(
                 onPhotoClick = {
